@@ -1,0 +1,23 @@
+language: cpp
+os: linux
+dist: bionic
+sudo: required
+compiler:
+  - gcc
+  - clang
+addons:
+  apt:
+    sources:
+      - sourceline: 'ppa:mhier/libboost-latest'
+    packages:
+      - libboost1.70-dev
+  snaps:
+    - name: cmake
+      confinement: classic
+script:
+  - /snap/bin/cmake -S . -B build
+  - /snap/bin/cmake --build build --target tests
+  - cd build/tests
+  - ./tests --log_level=all
+  - cd ../..
+  - /snap/bin/cmake --build build --target path_planning
