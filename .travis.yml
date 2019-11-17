@@ -14,10 +14,14 @@ addons:
   snaps:
     - name: cmake
       confinement: classic
+env:
+  - BUILD=Debug
+  - BUILD=Release
 script:
-  - /snap/bin/cmake -S . -B build
-  - /snap/bin/cmake --build build --target tests
-  - cd build/tests
+  - export BUILD_DIR=${BUILD}-Build
+  - /snap/bin/cmake -S . -B ${BUILD_DIR} -D CMAKE_BUILD_TYPE=${BUILD}
+  - /snap/bin/cmake --build ${BUILD_DIR} --target tests
+  - cd ${BUILD_DIR}/tests
   - ./tests --log_level=all
   - cd ../..
-  - /snap/bin/cmake --build build --target path_planning
+  - /snap/bin/cmake --build ${BUILD_DIR} --target path_planning

@@ -66,11 +66,11 @@ namespace planner {
         throw std::logic_error{ "unknown heuristic type: " + text };
     }
 
-    std::shared_ptr<TieBreaker<Point>> parse_tie_breaker(const std::string& text) {
+    std::shared_ptr<TieBreaker> parse_tie_breaker(const std::string& text) {
         if (text == "g-max") {
-            return std::make_unique<GMax<Point>>();
+            return std::make_unique<GMax>();
         } else if (text == "g-min") {
-            return std::make_unique<GMin<Point>>();
+            return std::make_unique<GMin>();
         }
         throw std::logic_error{ "unknown tie breaker: " + text };
     }

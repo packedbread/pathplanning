@@ -14,4 +14,4 @@ add_library(pathp
     search/jumppoint.cpp
     search/thetastar.cpp
     quadratic.hpp
-)
+        search/tiebreaker.cpp)

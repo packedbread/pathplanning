@@ -2,22 +2,23 @@
 
 
 namespace planner {
-    template <typename Node>  // todo: this probably should not be template
-    struct TieBreaker{
-        virtual bool is_worse(const Node& a, const Node& b) const = 0;
+    class Node;
+
+    struct TieBreaker {
+        virtual bool is_better(const Node& a, const Node& b) const = 0;
+        virtual bool is_same(const Node& a, const Node& b) const;
     };
 
-    template <typename Node>
-    struct GMax : TieBreaker<Node> {
-        bool is_worse(const Node &a, const Node &b) const override {
-            return false;  // todo: implement gmax tie breaker
-        }
+    struct GMax : TieBreaker {
+        bool is_better(const Node &a, const Node &b) const override;
     };
 
-    template <typename Node>
-    struct GMin : TieBreaker<Node> {
-        bool is_worse(const Node &a, const Node &b) const override {
-            return false;  // todo: implement gmin tie breaker
-        }
+    struct GMin : TieBreaker {
+        bool is_better(const Node &a, const Node &b) const override;
+    };
+
+    // todo: consider moving this into search inner state, same as tie breaker and heuristic
+    struct FinalizingTieBreaker {
+        static bool is_better(const Node& a, const Node& b);
     };
 }

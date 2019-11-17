@@ -34,7 +34,7 @@ BOOST_FIXTURE_TEST_CASE(test_read_algorithm, IOAdapterFixture) {
     auto algorithm = adapter.read_algorithm();
     BOOST_CHECK_NO_THROW(dynamic_cast<AStar&>(*algorithm));
     BOOST_CHECK_NO_THROW(dynamic_cast<Diagonal<Point>&>(*algorithm->get_heuristic()));
-    BOOST_CHECK_NO_THROW(dynamic_cast<GMax<Point>&>(*algorithm->get_tie_breaker()));
+    BOOST_CHECK_NO_THROW(dynamic_cast<GMax&>(*algorithm->get_tie_breaker()));
     Options correct_options {
         1.0,
         true,
