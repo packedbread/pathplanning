@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 file(COPY data DESTINATION .)
 
-add_executable(tests main.cpp test_ioadapter.cpp test_map.cpp)
+add_executable(tests main.cpp test_ioadapter.cpp test_map.cpp test_quadratic.cpp)
 
 find_package(Boost REQUIRED COMPONENTS unit_test_framework)
 include_directories(${Boost_INCLUDE_DIR})

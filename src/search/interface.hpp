@@ -4,6 +4,8 @@
 #include "heuristic.hpp"
 #include "tiebreaker.hpp"
 #include "../map.hpp"  // todo: figure out how to remove relative location dependency
+#include "../quadratic.hpp"
+
 
 namespace planner {
     struct Options {

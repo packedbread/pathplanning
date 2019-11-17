@@ -13,4 +13,5 @@ add_library(pathp
     search/astar.cpp
     search/jumppoint.cpp
     search/thetastar.cpp
+    quadratic.hpp
 )
