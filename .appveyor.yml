@@ -9,20 +9,20 @@ branches:
   only:
     - master
 install:
-  - cmd: SET PATH=C:\msys64;%PATH%
+  - cmd: SET PATH=C:\Qt\5.13.2\mingw73_64\bin;%PATH%
   - rename "C:\Program Files\Git\usr\bin\sh.exe" "sh-ignored.exe"
 environment:
   matrix:
     - BUILD_TYPE: Release
-      COMPILER: MSYS
+      COMPILER: MinGW
       PLATFORM: x64
       BOOST_ROOT: C:\Libraries\boost_1_71_0
     - BUILD_TYPE: Debug
-      COMPILER: MSYS
+      COMPILER: MinGW
       PLATFORM: x64
       BOOST_ROOT: C:\Libraries\boost_1_71_0
 build_script:
-  - cmake -G "MSYS Makefiles" -S . -B %BUILD_TYPE%-Build -D CMAKE_BUILD_TYPE=%BUILD_TYPE%
+  - cmake -G "MinGW Makefiles" -S . -B %BUILD_TYPE%-Build -D CMAKE_BUILD_TYPE=%BUILD_TYPE%
   - cmake --build %BUILD_TYPE%-Build --target tests
   - cd %BUILD_TYPE%-Build\tests
   - start tests.exe --log_level=all
