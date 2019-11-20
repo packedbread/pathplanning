@@ -1,0 +1,27 @@
+image:
+  - Visual Studio 2017
+version: "{build}"
+clone_depth: 1
+init:
+  - git config --global core.longpaths true
+  - git config --global core.autocrlf input
+branches:
+  only:
+    - master
+install:
+  - cmd: SET PATH=C:\mingw-w64\x86_64-7.2.0-posix-seh-rt_v5-rev1\mingw64\bin\;%PATH%
+  - rename "C:\Program Files\Git\usr\bin\sh.exe" "sh-ignored.exe"
+environment:
+  matrix:
+    - BUILD_TYPE: Release
+      COMPILER: MinGW-w64
+      PLATFORM: x64
+    - BUILD_TYPE: Debug
+      COMPILER: MinGW-w64
+      PLATFORM: x64
+build_script:
+  - cmake -G "MinGW Makefiles" -S . -B %BUILD_TYPE%-Build -D CMAKE_BUILD_TYPE=%BUILD_TYPE%
+  - cmake --build %BUILD_TYPE%-Build --target tests
+  - cd %BUILD_TYPE%-Build\tests
+  - start tests.exe
+  - cmake --build ${BUILD_DIR} --target path_planning
