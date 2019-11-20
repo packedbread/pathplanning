@@ -24,4 +24,5 @@ build_script:
   - cmake --build %BUILD_TYPE%-Build --target tests
   - cd %BUILD_TYPE%-Build\tests
   - start tests.exe
+  - cd ..\..
   - cmake --build ${BUILD_DIR} --target path_planning
