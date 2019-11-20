@@ -18,13 +18,15 @@ environment:
       PLATFORM: x64
       BOOST_ROOT: C:\Libraries\boost_1_69_0
       BOOST_LIBRARYDIR: C:\Libraries\boost_1_69_0\libs
+      BOOST_DEBUG: ON
     - BUILD_TYPE: Debug
       COMPILER: MinGW-w64
       PLATFORM: x64
       BOOST_ROOT: C:\Libraries\boost_1_69_0
       BOOST_LIBRARYDIR: C:\Libraries\boost_1_69_0\libs
+      BOOST_DEBUG: ON
 build_script:
-  - cmake --log_level=VERBOSE -G "MinGW Makefiles" -S . -B %BUILD_TYPE%-Build -D CMAKE_BUILD_TYPE=%BUILD_TYPE%
+  - cmake -G "MinGW Makefiles" -S . -B %BUILD_TYPE%-Build -D CMAKE_BUILD_TYPE=%BUILD_TYPE%
   - cmake --build %BUILD_TYPE%-Build --target tests
   - cd %BUILD_TYPE%-Build\tests
   - start tests.exe --log_level=all
