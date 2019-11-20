@@ -16,13 +16,16 @@ environment:
     - BUILD_TYPE: Release
       COMPILER: MinGW-w64
       PLATFORM: x64
-      BOOST_ROOT: C:\Libraries\boost_1_69_0\boost
+      BOOST_ROOT: C:\Libraries\boost_1_69_0
+      BOOST_INCLUDEDIR: C:\Libraries\boost_1_69_0\boost
+      BOOST_LIBRARYDIR: C:\Libraries\boost_1_69_0\lib64-msvc-14.1
     - BUILD_TYPE: Debug
       COMPILER: MinGW-w64
       PLATFORM: x64
-      BOOST_ROOT: C:\Libraries\boost_1_69_0\boost
+      BOOST_ROOT: C:\Libraries\boost_1_69_0
+      BOOST_INCLUDEDIR: C:\Libraries\boost_1_69_0\boost
+      BOOST_LIBRARYDIR: C:\Libraries\boost_1_69_0\lib64-msvc-14.1
 build_script:
-  - dir C:\Libraries\boost_1_69_0\boost
   - cmake -G "MinGW Makefiles" -S . -B %BUILD_TYPE%-Build -D CMAKE_BUILD_TYPE=%BUILD_TYPE%
   - cmake --build %BUILD_TYPE%-Build --target tests
   - cd %BUILD_TYPE%-Build\tests
