@@ -7,11 +7,8 @@ add_library(pathp
     pugixml.cpp
     ioadapter.cpp
     map.cpp
-    search/interface.cpp
-    search/breadthfirst.cpp
-    search/dijkstra.cpp
-    search/astar.cpp
-    search/jumppoint.cpp
-    search/thetastar.cpp
     quadratic.hpp
-        search/tiebreaker.cpp)
+    search/interface.cpp
+    search/tiebreaker.cpp
+    search/astar.cpp
+)

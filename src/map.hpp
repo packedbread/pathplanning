@@ -1,19 +1,28 @@
 #pragma once
 #include <algorithm>
+#include <array>
 #include <cstddef>
+#include <functional>
 #include <ostream>
 #include <vector>
 
 
 namespace planner {
     enum class CellType {
-        empty = 0,
-        obstacle,
+        obstacle = 0,
+        empty,
     };
 
     std::ostream& operator << (std::ostream& out, CellType type);
 
     struct DefaultMapper {
+        template <typename T>
+        CellType operator () (const T& value) {
+            return value == T{} ? CellType::obstacle : CellType::empty;
+        }
+    };
+
+    struct InverseMapper {
         template <typename T>
         CellType operator () (const T& value) {
             return value == T{} ? CellType::empty : CellType::obstacle;
@@ -43,7 +52,6 @@ namespace planner {
         using const_iterator = typename std::vector<CellType>::const_iterator;
         using reverse_iterator = typename std::vector<CellType>::reverse_iterator;
         using const_reverse_iterator = typename std::vector<CellType>::const_reverse_iterator;
-
     private:
         size_type width;
         size_type height;
@@ -57,7 +65,7 @@ namespace planner {
             data(data)
         {}
 
-        template <typename T, typename Mapper = planner::DefaultMapper>
+        template <typename T, typename Mapper>
         GridMap(size_type width, size_type height, double cell_size, const std::vector<T>& data, Mapper mapper = {}) :
                 width(width),
                 height(height),
@@ -80,6 +88,13 @@ namespace planner {
 
         value_type operator ()(size_type x, size_type y) const {
             return data[y * width + x];
+        }
+
+        value_type bordered_at(size_type x, size_type y, CellType border_value = {}) const {
+            if (x < width && y < height) {
+                return (*this)(x, y);
+            }
+            return border_value;
         }
 
         iterator begin() {
@@ -118,6 +133,17 @@ namespace planner {
         }
         const_reverse_iterator crend() const {
             return data.crend();
+        }
+    };
+}
+
+namespace std {
+    template <>
+    struct hash<planner::Point> {
+        std::size_t operator () (const planner::Point& point) const {
+            std::hash<size_t> hasher;
+            std::size_t x_hash = hasher(point.x);
+            return hasher(point.y) + 0x9e3779b9u + (x_hash << 6u) + (x_hash >> 2u);
         }
     };
 }

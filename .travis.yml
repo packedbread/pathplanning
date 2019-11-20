@@ -11,12 +11,15 @@ addons:
       - sourceline: 'ppa:mhier/libboost-latest'
     packages:
       - libboost1.70-dev
+      - g++-8
   snaps:
     - name: cmake
       confinement: classic
 env:
   - BUILD=Debug
   - BUILD=Release
+before_script:
+  - sudo ln -s /usr/bin/g++-8 /usr/local/bin/g++
 script:
   - export BUILD_DIR=${BUILD}-Build
   - /snap/bin/cmake -S . -B ${BUILD_DIR} -D CMAKE_BUILD_TYPE=${BUILD}

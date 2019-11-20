@@ -5,8 +5,8 @@
 namespace planner {
     class AStar : public Search {
     public:
-        AStar(std::shared_ptr<Heuristic<Point>> heuristic, std::shared_ptr<TieBreaker> tie_breaker, const Options& options);
+        using Search::Search;
 
-        [[nodiscard]] SearchState search() const override;
+        [[nodiscard]] SearchState search(Point from, Point to, const GridMap<CellType>& map) const override;
     };
 }

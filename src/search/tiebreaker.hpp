@@ -4,21 +4,16 @@
 namespace planner {
     class Node;
 
+    // invocation contract: only if node values are the same
     struct TieBreaker {
-        virtual bool is_better(const Node& a, const Node& b) const = 0;
-        virtual bool is_same(const Node& a, const Node& b) const;
+        [[nodiscard]] virtual bool is_better(const Node& a, const Node& b) const = 0;
     };
 
     struct GMax : TieBreaker {
-        bool is_better(const Node &a, const Node &b) const override;
+        [[nodiscard]] bool is_better(const Node &a, const Node &b) const override;
     };
 
     struct GMin : TieBreaker {
-        bool is_better(const Node &a, const Node &b) const override;
-    };
-
-    // todo: consider moving this into search inner state, same as tie breaker and heuristic
-    struct FinalizingTieBreaker {
-        static bool is_better(const Node& a, const Node& b);
+        [[nodiscard]] bool is_better(const Node &a, const Node &b) const override;
     };
 }

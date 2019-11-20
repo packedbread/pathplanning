@@ -1,4 +1,5 @@
 #pragma once
+#include <chrono>
 #include <list>
 #include <ostream>
 #include <memory>
@@ -29,27 +30,39 @@ namespace planner {
         Point position;
         number distance;
         number estimation;
+        std::shared_ptr<Node> expanded_from;
 
-        Node(Point position, number distance, number estimation);
-
-        [[nodiscard]] number value() const;
+        Node(Point position, number distance, number estimation, std::shared_ptr<Node> expanded_from = nullptr);
     };
 
-    class SearchState {
-        std::shared_ptr<Node> expanded_from;
+    std::ostream& operator << (std::ostream& out, const Node& node);
+
+    struct SearchState {
         std::list<std::shared_ptr<Node>> path;
         std::list<std::shared_ptr<Node>> open;
         std::list<std::shared_ptr<Node>> closed;
+        std::chrono::high_resolution_clock::duration time_spent;
+
+        [[nodiscard]] double path_length() const;
     };
 
     // todo: refactor Search to accept heuristic, tie breaker and options as template parameters
+    // it may be hard or even impossible, because necessary types will be known only when the file is read
+    // which will happen at runtime
+
     class Search {
     protected:
         std::shared_ptr<Heuristic<Point>> heuristic;
         std::shared_ptr<TieBreaker> tie_breaker;
         Options options;
 
-        [[nodiscard]] bool is_better(const Node& a, const Node& b) const;
+        struct Comparator {
+            const Search& search;
+
+            Comparator(const Search& search);
+
+            [[nodiscard]] bool operator () (const std::shared_ptr<Node>& a, const std::shared_ptr<Node>& b) const;
+        };
     public:
         Search(std::shared_ptr<Heuristic<Point>> heuristic, std::shared_ptr<TieBreaker> tie_breaker, const Options& options);
 
@@ -57,6 +70,6 @@ namespace planner {
         [[nodiscard]] const std::shared_ptr<TieBreaker>& get_tie_breaker() const;
         [[nodiscard]] const Options& get_options() const;
 
-        [[nodiscard]] virtual SearchState search() const = 0;
+        [[nodiscard]] virtual SearchState search(Point from, Point to, const GridMap<CellType>& map) const = 0;
     };
 }

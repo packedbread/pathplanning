@@ -35,15 +35,15 @@ namespace planner {
         }
     };
 
-    template <typename T, typename Root>
-    Quadratic<T, Root> operator + (Quadratic<T, Root> a, Quadratic<T, Root> b) {
+    template <typename T, typename Root, typename U>
+    Quadratic<T, Root> operator + (Quadratic<T, Root> a, U b) {
         Quadratic<T, Root> result = a;
         result += b;
         return result;
     }
 
-    template <typename T, typename Root>
-    Quadratic<T, Root> operator - (Quadratic<T, Root> a, Quadratic<T, Root> b) {
+    template <typename T, typename Root, typename U>
+    Quadratic<T, Root> operator - (Quadratic<T, Root> a, U b) {
         Quadratic<T, Root> result = a;
         result -= b;
         return result;
