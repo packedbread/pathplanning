@@ -1,5 +1,5 @@
 image:
-  - Visual Studio 2017
+  - Visual Studio 2019
 version: "{build}"
 clone_depth: 1
 init:
@@ -16,13 +16,13 @@ environment:
     - BUILD_TYPE: Release
       COMPILER: MinGW-w64
       PLATFORM: x64
-      BOOST_ROOT: C:\Libraries\boost_1_69_0
+      BOOST_ROOT: C:\Libraries\boost_1_71_0
     - BUILD_TYPE: Debug
       COMPILER: MinGW-w64
       PLATFORM: x64
-      BOOST_ROOT: C:\Libraries\boost_1_69_0
+      BOOST_ROOT: C:\Libraries\boost_1_71_0
 build_script:
-  - cmake --log_level=DEBUG -G "MinGW Makefiles" -S . -B %BUILD_TYPE%-Build -D CMAKE_BUILD_TYPE=%BUILD_TYPE% -D BOOST_DEBUG=ON
+  - cmake -G "MinGW Makefiles" -S . -B %BUILD_TYPE%-Build -D CMAKE_BUILD_TYPE=%BUILD_TYPE%
   - cmake --build %BUILD_TYPE%-Build --target tests
   - cd %BUILD_TYPE%-Build\tests
   - start tests.exe --log_level=all
