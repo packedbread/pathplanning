@@ -22,8 +22,7 @@ environment:
       PLATFORM: x64
       BOOST_ROOT: C:\Libraries\boost_1_67_0
 build_script:
-  - dir C:\Libraries\boost_1_69_0\
-  - cmake -G "MinGW Makefiles" -S . -B %BUILD_TYPE%-Build -D CMAKE_BUILD_TYPE=%BUILD_TYPE%
+  - cmake -G "MinGW Makefiles" -S . -B %BUILD_TYPE%-Build -D CMAKE_BUILD_TYPE=%BUILD_TYPE% --log_level=VERBOSE
   - cmake --build %BUILD_TYPE%-Build --target tests
   - cd %BUILD_TYPE%-Build\tests
   - start tests.exe --log_level=all
