@@ -14,11 +14,11 @@ install:
 environment:
   matrix:
     - BUILD_TYPE: Release
-      COMPILER: MinGW-w64
+      COMPILER: MinGW
       PLATFORM: x64
       BOOST_ROOT: C:\Libraries\boost_1_71_0
     - BUILD_TYPE: Debug
-      COMPILER: MinGW-w64
+      COMPILER: MinGW
       PLATFORM: x64
       BOOST_ROOT: C:\Libraries\boost_1_71_0
 build_script:
