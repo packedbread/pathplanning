@@ -24,7 +24,7 @@ environment:
       BOOST_ROOT: C:\Libraries\boost_1_69_0
       BOOST_INCLUDEDIR: C:\Libraries\boost_1_69_0\include\boost-1_69
 build_script:
-  - dir C:\Libraries\boost_1_69_0\include
+  - dir C:\Libraries\boost_1_69_0
   - cmake -G "MinGW Makefiles" -S . -B %BUILD_TYPE%-Build -D CMAKE_BUILD_TYPE=%BUILD_TYPE%
   - cmake --build %BUILD_TYPE%-Build --target tests
   - cd %BUILD_TYPE%-Build\tests
