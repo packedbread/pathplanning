@@ -24,4 +24,5 @@ build_script:
 test_script:
   - cd %BUILD_TYPE%-Build\tests
   - dir
+  - dir Debug
   - tests.exe --log_level=all
