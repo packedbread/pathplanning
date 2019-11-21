@@ -20,6 +20,7 @@ env:
   - BUILD=Release
 before_script:
   - sudo ln -s /usr/bin/g++-8 /usr/local/bin/g++
+  - export CXX=${TRAVIS_COMPILER} CC=${TRAVIS_COMPILER}
 script:
   - export BUILD_DIR=${BUILD}-Build
   - /snap/bin/cmake -S . -B ${BUILD_DIR} -D CMAKE_BUILD_TYPE=${BUILD}
