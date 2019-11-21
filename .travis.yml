@@ -43,11 +43,12 @@ jobs:
         - export CC=gcc CXX=g++
       env: BUILD=Release
     - compiler: clang
-      apt:
-        sources:
-          - sourceline: 'ppa:mhier/libboost-latest'
-        packages:
-          - libboost1.70-dev
+      addons:
+        apt:
+          sources:
+            - sourceline: 'ppa:mhier/libboost-latest'
+          packages:
+            - libboost1.70-dev
         snaps:
           - name: cmake
             confinement: classic
@@ -61,11 +62,12 @@ jobs:
         - export CC=clang CXX=clang++
       env: BUILD=Debug
     - compiler: clang
-      apt:
-        sources:
-            - sourceline: 'ppa:mhier/libboost-latest'
-        packages:
-          - libboost1.70-dev
+      addons:
+        apt:
+          sources:
+              - sourceline: 'ppa:mhier/libboost-latest'
+          packages:
+            - libboost1.70-dev
         snaps:
           - name: cmake
             confinement: classic
