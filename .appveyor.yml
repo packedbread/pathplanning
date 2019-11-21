@@ -19,7 +19,6 @@ environment:
       BOOST_ROOT: C:\Libraries\boost_1_71_0
 build_script:
   - dir C:\Libraries\boost_1_71_0
-  - dir C:\Libraries\boost_1_71_0\lib
   - cmake -S . -B %BUILD_TYPE%-Build -D CMAKE_BUILD_TYPE=%BUILD_TYPE% -D Boost_DEBUG=ON
   - cmake --build %BUILD_TYPE%-Build --target tests
   - cd %BUILD_TYPE%-Build\tests
