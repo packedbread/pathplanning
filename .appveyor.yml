@@ -15,10 +15,14 @@ environment:
   matrix:
     - BUILD_TYPE: Release
       BOOST_ROOT: C:\Libraries\boost_1_71_0
+      CC: C:\msys64\mingw64.exe
+      CXX: C:\msys64\mingw64.exe
     - BUILD_TYPE: Debug
       BOOST_ROOT: C:\Libraries\boost_1_71_0
+      CC: C:\msys64\mingw64.exe
+      CXX: C:\msys64\mingw64.exe
 build_script:
-  - cmake -G "MSYS Makefiles" -S . -B %BUILD_TYPE%-Build -D CMAKE_BUILD_TYPE=%BUILD_TYPE%
+  - cmake -G "MinGW Makefiles" -S . -B %BUILD_TYPE%-Build -D CMAKE_BUILD_TYPE=%BUILD_TYPE%
   - cmake --build %BUILD_TYPE%-Build --target tests
   - cd %BUILD_TYPE%-Build\tests
   - start tests.exe --log_level=all
