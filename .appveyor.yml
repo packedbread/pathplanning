@@ -15,14 +15,14 @@ environment:
   matrix:
     - BUILD_TYPE: Release
       BOOST_ROOT: C:\Libraries\boost_1_71_0
-      BOOST_LIBRARYDIR: C:\Libraries\boost_1_71_0\libs
+      BOOST_LIBRARYDIR: C:\Libraries\boost_1_71_0\lib64-msvc-14.2
     - BUILD_TYPE: Debug
       BOOST_ROOT: C:\Libraries\boost_1_71_0
-      BOOST_LIBRARYDIR: C:\Libraries\boost_1_71_0\libs
+      BOOST_LIBRARYDIR: C:\Libraries\boost_1_71_0\lib64-msvc-14.2
 build_script:
   - dir C:\Libraries\boost_1_71_0
-  - dir C:\Libraries\boost_1_71_0\lib
   - dir C:\Libraries\boost_1_71_0\libs
+  - dir C:\Libraries\boost_1_71_0\lib64-msvc-14.2
   - cmake -G "MinGW Makefiles" -S . -B %BUILD_TYPE%-Build -D CMAKE_BUILD_TYPE=%BUILD_TYPE%
   - cmake --build %BUILD_TYPE%-Build --target tests
   - cd %BUILD_TYPE%-Build\tests
