@@ -11,6 +11,7 @@ branches:
 install:
   - cmd: SET PATH=C:\msys64;C:\msys64\mingw64\bin;%PATH%
   - rename "C:\Program Files\Git\usr\bin\sh.exe" "sh-ignored.exe"
+  - rename "C:\Libraries\boost_1_71_0\lib64-msvc-14.2" lib
 environment:
   matrix:
     - BUILD_TYPE: Release
@@ -18,12 +19,9 @@ environment:
     - BUILD_TYPE: Debug
       BOOST_ROOT: C:\Libraries\boost_1_71_0
 build_script:
-  - dir C:\msys64
-  - dir C:\msys64\mingw64\bin
   - cmake -G "MinGW Makefiles" -S . -B %BUILD_TYPE%-Build -D CMAKE_BUILD_TYPE=%BUILD_TYPE% -D Boost_DEBUG=ON
   - cmake --build %BUILD_TYPE%-Build --target tests
   - cmake --build %BUILD_TYPE%-Build --target path_planning
 test_script:
   - cd %BUILD_TYPE%-Build\tests
-  - dir
   - tests.exe --log_level=all
