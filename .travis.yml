@@ -42,9 +42,3 @@ script:
   - ./tests --log_level=all
   - cd ../..
   - /snap/bin/cmake --build ${BUILD_DIR} --target path_planning
-
-wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-sudo apt-add-repository "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-9 main"
-sudo apt-add-repository "deb-src http://apt.llvm.org/bionic/ llvm-toolchain-bionic-9 main"
-sudo apt-get update
-sudo apt-get install clang-9 libc++-9-dev libc++abi-9-dev
