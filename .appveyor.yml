@@ -23,4 +23,4 @@ build_script:
   - cmake --build %BUILD_TYPE%-Build --target path_planning
 test_script:
   - cd %BUILD_TYPE%-Build\tests
-  - start /b tests.exe --log_level=all
+  - tests.exe --log_level=all
