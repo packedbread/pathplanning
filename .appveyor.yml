@@ -9,7 +9,7 @@ branches:
   only:
     - master
 install:
-  - cmd: SET PATH=C:\msys64;C:\msys64\mingw64;%PATH%
+  - cmd: SET PATH=C:\msys64;C:\msys64\mingw64\bin;%PATH%
   - rename "C:\Program Files\Git\usr\bin\sh.exe" "sh-ignored.exe"
 environment:
   matrix:
@@ -18,7 +18,7 @@ environment:
     - BUILD_TYPE: Debug
       BOOST_ROOT: C:\Libraries\boost_1_71_0
 build_script:
-  - dir C:\msys64\mingw64
+  - dir C:\msys64\mingw64\bin
   - cmake -G "MinGW Makefiles" -S . -B %BUILD_TYPE%-Build -D CMAKE_BUILD_TYPE=%BUILD_TYPE%
   - cmake --build %BUILD_TYPE%-Build --target tests
   - cd %BUILD_TYPE%-Build\tests
