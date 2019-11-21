@@ -11,14 +11,13 @@ branches:
 install:
   - cmd: SET PATH=C:\msys64;C:\msys64\mingw64\bin;%PATH%
   - rename "C:\Program Files\Git\usr\bin\sh.exe" "sh-ignored.exe"
+  - rename "C:\Libraries\boost_1_71_0\lib64-msvc-14.2" "lib"
 environment:
   matrix:
     - BUILD_TYPE: Release
       BOOST_ROOT: C:\Libraries\boost_1_71_0
-      BOOST_LIBRARYDIR: C:\Libraries\boost_1_71_0\lib64-msvc-14.2
     - BUILD_TYPE: Debug
       BOOST_ROOT: C:\Libraries\boost_1_71_0
-      BOOST_LIBRARYDIR: C:\Libraries\boost_1_71_0\lib64-msvc-14.2
 build_script:
   - dir C:\Libraries\boost_1_71_0\lib64-msvc-14.2
   - cmake --check-system-vars
