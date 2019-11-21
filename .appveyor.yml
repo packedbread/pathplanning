@@ -20,10 +20,10 @@ environment:
 build_script:
   - dir C:\msys64
   - dir C:\msys64\mingw64\bin
-  - cmake -G "MinGW Makefiles" -S . -B %BUILD_TYPE%-Build -D CMAKE_BUILD_TYPE=%BUILD_TYPE%
+  - cmake -G "MinGW Makefiles" -S . -B %BUILD_TYPE%-Build -D CMAKE_BUILD_TYPE=%BUILD_TYPE% -D Boost_DEBUG=ON
   - cmake --build %BUILD_TYPE%-Build --target tests
   - cmake --build %BUILD_TYPE%-Build --target path_planning
 test_script:
   - cd %BUILD_TYPE%-Build\tests
-  - move Debug\tests.exe .
+  - dir
   - tests.exe --log_level=all
