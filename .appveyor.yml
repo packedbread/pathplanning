@@ -20,7 +20,7 @@ environment:
 build_script:
   - cmake -S . -B %BUILD_TYPE%-Build -D CMAKE_BUILD_TYPE=%BUILD_TYPE%
   - cmake --build %BUILD_TYPE%-Build --target tests
+  - cmake --build %BUILD_TYPE%-Build --target path_planning
+test_script:
   - cd %BUILD_TYPE%-Build\tests
-  - start tests.exe --log_level=all
-  - cd ..\..
-  - cmake --build ${BUILD_DIR} --target path_planning
+  - cmd: start tests.exe --log_level=all
