@@ -16,7 +16,8 @@ environment:
     - BUILD_TYPE: Release
     - BUILD_TYPE: Debug
 build_script:
-  - cmake -G "MinGW Makefiles" -S . -B %BUILD_TYPE%-Build -D CMAKE_BUILD_TYPE=%BUILD_TYPE% -D BOOST_ROOT=C:\Libraries\boost_1_71_0 -D BOOST_LIBRARYDIR=C:\Libraries\boost_1_71_0\lib64-msvc-14.2
+  - cmake --check-system-vars
+  - cmake -G "MinGW Makefiles" -S . -B %BUILD_TYPE%-Build -D CMAKE_BUILD_TYPE=%BUILD_TYPE%
   - cmake --build %BUILD_TYPE%-Build --target tests
   - cd %BUILD_TYPE%-Build\tests
   - start tests.exe --log_level=all
