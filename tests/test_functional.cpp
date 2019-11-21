@@ -38,7 +38,7 @@ BOOST_DATA_TEST_CASE(dataset, FunctionalTestDataset{}, directory_entry) {
     if (!directory_entry.is_regular_file()) {
         return;
     }
-    IOAdapterFixture fixture{ directory_entry.path() };
+    IOAdapterFixture fixture{ std::string{ directory_entry.path() } };
     auto map = fixture.adapter.read_map();
     auto locations = fixture.adapter.read_locations();
     auto search = fixture.adapter.read_algorithm();
