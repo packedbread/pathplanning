@@ -2,84 +2,27 @@ language: cpp
 os: linux
 dist: bionic
 sudo: required
-jobs:
-  include:
-    - compiler: gcc
-      addons:
-        apt:
-          sources:
-            - sourceline: 'ppa:mhier/libboost-latest'
-            - sourceline: 'ppa:ubuntu-toolchain-r/test'
-          packages:
-            - libboost1.70-dev
-            - gcc-9
-            - g++-9
-            - libstdc++-9-dev
-        snaps:
-          - name: cmake
-            confinement: classic
-      install:
-        - sudo ln -s /usr/bin/gcc-9 /usr/local/bin/gcc
-        - sudo ln -s /usr/bin/g++-9 /usr/local/bin/g++
-        - export CC=gcc CXX=g++
-      env: BUILD=Debug
-    - compiler: gcc
-      addons:
-        apt:
-          sources:
-              - sourceline: 'ppa:mhier/libboost-latest'
-              - sourceline: 'ppa:ubuntu-toolchain-r/test'
-          packages:
-            - libboost1.70-dev
-            - gcc-9
-            - g++-9
-            - libstdc++-9-dev
-        snaps:
-          - name: cmake
-            confinement: classic
-      install:
-        - sudo ln -s /usr/bin/gcc-9 /usr/local/bin/gcc
-        - sudo ln -s /usr/bin/g++-9 /usr/local/bin/g++
-        - export CC=gcc CXX=g++
-      env: BUILD=Release
-    - compiler: clang
-      addons:
-        apt:
-          sources:
-            - sourceline: 'ppa:mhier/libboost-latest'
-          packages:
-            - libboost1.70-dev
-        snaps:
-          - name: cmake
-            confinement: classic
-      install:
-        - wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-        - sudo apt-add-repository "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-9 main"
-        - sudo apt-get update
-        - sudo apt-get install clang-9 libc++-9-dev libc++abi-9-dev
-        - sudo ln -s /usr/bin/clang-9 /usr/local/bin/clang
-        - sudo ln -s /usr/bin/clang++-9 /usr/local/bin/clang++
-        - export CC=clang CXX=clang++
-      env: BUILD=Debug
-    - compiler: clang
-      addons:
-        apt:
-          sources:
-              - sourceline: 'ppa:mhier/libboost-latest'
-          packages:
-            - libboost1.70-dev
-        snaps:
-          - name: cmake
-            confinement: classic
-      install:
-        - wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-        - sudo apt-add-repository "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-9 main"
-        - sudo apt-get update
-        - sudo apt-get install clang-9 libc++-9-dev libc++abi-9-dev
-        - sudo ln -s /usr/bin/clang-9 /usr/local/bin/clang
-        - sudo ln -s /usr/bin/clang++-9 /usr/local/bin/clang++
-        - export CC=clang CXX=clang++
-      env: BUILD=Release
+compiler: gcc
+addons:
+  apt:
+    sources:
+      - sourceline: 'ppa:mhier/libboost-latest'
+      - sourceline: 'ppa:ubuntu-toolchain-r/test'
+    packages:
+      - libboost1.70-dev
+      - gcc-9
+      - g++-9
+      - libstdc++-9-dev
+  snaps:
+    - name: cmake
+      confinement: classic
+install:
+  - sudo ln -s /usr/bin/gcc-9 /usr/local/bin/gcc
+  - sudo ln -s /usr/bin/g++-9 /usr/local/bin/g++
+  - export CC=gcc CXX=g++
+env:
+  - BUILD=Debug
+  - BUILD=Release
 script:
   - export BUILD_DIR=${BUILD}-Build
   - /snap/bin/cmake -S . -B ${BUILD_DIR} -D CMAKE_BUILD_TYPE=${BUILD}
@@ -88,3 +31,5 @@ script:
   - ./tests --log_level=all
   - cd ../..
   - /snap/bin/cmake --build ${BUILD_DIR} --target path_planning
+
+# todo: add clang support with libc++
