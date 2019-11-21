@@ -23,6 +23,5 @@ build_script:
   - cmake --build %BUILD_TYPE%-Build --target path_planning
 test_script:
   - cd %BUILD_TYPE%-Build\tests
-  - dir
-  - dir Debug
+  - move Debug\tests.exe .
   - tests.exe --log_level=all
