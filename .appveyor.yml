@@ -14,7 +14,9 @@ install:
 environment:
   matrix:
     - BUILD_TYPE: Release
+      BOOST_ROOT: C:\Libraries\boost_1_71_0
     - BUILD_TYPE: Debug
+      BOOST_ROOT: C:\Libraries\boost_1_71_0
 build_script:
   - cmake --check-system-vars
   - cmake -G "MinGW Makefiles" -S . -B %BUILD_TYPE%-Build -D CMAKE_BUILD_TYPE=%BUILD_TYPE%
