@@ -13,9 +13,3 @@ include_directories(${Boost_INCLUDE_DIR})
 target_link_libraries(tests ${Boost_LIBRARIES})
 
 target_link_libraries(tests pathp)
-
-if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-    target_link_libraries(tests c++fs)
-elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    target_link_libraries(tests stdc++fs)
-endif()

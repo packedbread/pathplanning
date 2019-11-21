@@ -2,25 +2,38 @@ language: cpp
 os: linux
 dist: bionic
 sudo: required
-compiler:
-  - gcc
-  - clang
 addons:
   apt:
     sources:
       - sourceline: 'ppa:mhier/libboost-latest'
     packages:
       - libboost1.70-dev
-      - g++-8
   snaps:
     - name: cmake
       confinement: classic
 env:
   - BUILD=Debug
   - BUILD=Release
-before_script:
-  - sudo ln -s /usr/bin/g++-8 /usr/local/bin/g++
-  - export CXX=${TRAVIS_COMPILER} CC=${TRAVIS_COMPILER}
+jobs:
+  include:
+    - compiler: gcc
+      install:
+        - sudo apt-add-repository ppa:ubuntu-toolchain-r/test
+        - sudo apt-get update
+        - sudo apt-get install gcc-9 g++-9 libstdc++-9-dev
+        - sudo ln -s /usr/bin/gcc-9 /usr/local/bin/gcc
+        - sudo ln -s /usr/bin/g++-9 /usr/local/bin/g++
+        - export CC=gcc CXX=g++
+    - compiler: clang
+      install:
+        - wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
+        - sudo apt-add-repository "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-9 main"
+        - sudo apt-add-repository "deb-src http://apt.llvm.org/bionic/ llvm-toolchain-bionic-9 main"
+        - sudo apt-get update
+        - sudo apt-get install clang-9 libc++-9-dev libc++abi-9-dev
+        - sudo ln -s /usr/bin/clang-9 /usr/local/bin/clang
+        - sudo ln -s /usr/bin/clang++-9 /usr/local/bin/clang++
+        - export CC=clang CXX=clang++
 script:
   - export BUILD_DIR=${BUILD}-Build
   - /snap/bin/cmake -S . -B ${BUILD_DIR} -D CMAKE_BUILD_TYPE=${BUILD}
@@ -29,3 +42,9 @@ script:
   - ./tests --log_level=all
   - cd ../..
   - /snap/bin/cmake --build ${BUILD_DIR} --target path_planning
+
+wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
+sudo apt-add-repository "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-9 main"
+sudo apt-add-repository "deb-src http://apt.llvm.org/bionic/ llvm-toolchain-bionic-9 main"
+sudo apt-get update
+sudo apt-get install clang-9 libc++-9-dev libc++abi-9-dev
