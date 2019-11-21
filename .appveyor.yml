@@ -15,8 +15,10 @@ environment:
   matrix:
     - BUILD_TYPE: Release
       BOOST_ROOT: C:\Libraries\boost_1_71_0
+      BOOST_LIBRARYDIR: C:\Libraries\boost_1_71_0\lib64-msvc-14.2
     - BUILD_TYPE: Debug
       BOOST_ROOT: C:\Libraries\boost_1_71_0
+      BOOST_LIBRARYDIR: C:\Libraries\boost_1_71_0\lib64-msvc-14.2
 build_script:
   - cmake --check-system-vars
   - cmake -S . -B %BUILD_TYPE%-Build -D CMAKE_BUILD_TYPE=%BUILD_TYPE%
