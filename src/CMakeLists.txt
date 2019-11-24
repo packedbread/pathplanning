@@ -7,7 +7,6 @@ add_library(pathp
     pugixml.cpp
     ioadapter.cpp
     map.cpp
-    quadratic.hpp
     search/interface.cpp
     search/tiebreaker.cpp
     search/astar.cpp

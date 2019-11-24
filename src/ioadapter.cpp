@@ -84,15 +84,19 @@ namespace planner {
         throw std::logic_error{ "unknown tie breaker: " + text };
     }
 
+    bool parse_bool_value(const std::string& text) {
+        return !(text == "false" || text == "False" || text == "0" || text == "0.0");
+    }
+
     std::shared_ptr<Search> IOAdapter::read_algorithm() const {
         auto algorithm_node = document.child("root").child("algorithm");
         auto heuristic = parse_metric(algorithm_node.child_value("metrictype"));
         auto tie_breaker = parse_tie_breaker(algorithm_node.child_value("breakingties"));
         Options options{
             std::stod(algorithm_node.child_value("hweight")),
-            std::string{algorithm_node.child_value("allowdiagonal")} == "true",
-            std::string{algorithm_node.child_value("cutcorners")} == "true",
-            std::string{algorithm_node.child_value("allowsqueeze")} == "true",
+            parse_bool_value(std::string{algorithm_node.child_value("allowdiagonal")}),
+            parse_bool_value(std::string{algorithm_node.child_value("cutcorners")}),
+            parse_bool_value(std::string{algorithm_node.child_value("allowsqueeze")}),
         };
         std::string search_type = algorithm_node.child_value("searchtype");
         if (search_type == "astar") {

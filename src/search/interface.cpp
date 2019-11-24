@@ -1,3 +1,4 @@
+#include "float_compare.hpp"
 #include "interface.hpp"
 
 
@@ -10,7 +11,7 @@ namespace planner {
                    options.allow_squeeze << " }";
     }
 
-    Node::Node(Point position, number distance, number estimation, std::shared_ptr<Node> expanded_from)  :
+    Node::Node(Point position, double distance, double estimation, std::shared_ptr<Node> expanded_from)  :
         position(position),
         distance(distance),
         estimation(estimation),
@@ -44,15 +45,15 @@ namespace planner {
     }
 
     double SearchState::path_length() const {
-        if (path.empty()) {
+        if (path.empty()) {  // todo: is this necessary?
             return 0.0;
         }
-        number result;
-        Manhattan<Point> metric;
+        double result = 0.0;
+        Euclidean<Point> metric;
         for (auto it = std::next(std::begin(path)); it != std::end(path); ++it) {
-            result += metric((*it)->position, (*it)->expanded_from->position).real < 2 ? 1 : number{ 0, 1 };
+            result += metric((*it)->position, (*it)->expanded_from->position);
         }
-        return evaluate(result);
+        return result;
     }
 
     Search::Comparator::Comparator(const Search& search) : search(search) {}
@@ -60,10 +61,9 @@ namespace planner {
     bool Search::Comparator::operator () (const std::shared_ptr<Node>& a, const std::shared_ptr<Node>& b) const {
         // order of operands is changed intentionally, due to priority queue nature
         // of returning elements with highest priority first, but using a strict weak ordering
-        if (a->distance + a->estimation == b->distance + b->estimation) {
+        if (very_close_equals(a->distance + search.options.heuristic_weight * a->estimation, b->distance + search.options.heuristic_weight * b->estimation)) {
             return search.tie_breaker->is_better(*b, *a);
         }
-        return evaluate(b->distance) + search.options.heuristic_weight * evaluate(b->estimation) <
-            evaluate(a->distance) + search.options.heuristic_weight * evaluate(a->estimation);
+        return a->distance + search.options.heuristic_weight * a->estimation > b->distance + search.options.heuristic_weight * b->estimation;
     }
 }

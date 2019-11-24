@@ -1,9 +1,9 @@
 #include "astar.hpp"
+#include "float_compare.hpp"
 #include <queue>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
-#include <iostream>
 
 
 namespace planner {
@@ -48,7 +48,7 @@ namespace planner {
                 &position,
                 &node,
                 &to
-            ](size_t x, size_t y, number distance_change = 1, bool extra_condition = true) -> void {
+            ](size_t x, size_t y, double distance_change, bool extra_condition = true) -> void {
                 if (
                     map.bordered_at(x, y) != CellType::obstacle &&
                     closed_checker.find({ x, y }) == std::end(closed_checker) &&
@@ -60,7 +60,7 @@ namespace planner {
                         open_checker[{ x, y }] = node_ptr;
                     } else {
                         auto node_ptr = open_checker[{ x, y }];
-                        if (evaluate(node->distance + distance_change) < evaluate(node_ptr->distance)) {
+                        if (node->distance + distance_change < node_ptr->distance) {
                             node_ptr->distance = node->distance + distance_change;
                             node_ptr->expanded_from = node;
                         }
@@ -71,7 +71,7 @@ namespace planner {
             for (auto [dx, dy] : {std::pair<int, int>{ -1, 0 }, { 0, 1 }, { 1, 0 }, { 0, -1 }}) {
                 auto x = position.x + dx;
                 auto y = position.y + dy;
-                insert_point(x, y);
+                insert_point(x, y, 1.0);
             }
             auto diagonal_elements = { std::pair<int, int>{ -1, -1 }, { -1, 1 }, { 1, 1 }, { 1, -1 } };
             if (options.allow_diagonal) {
@@ -80,20 +80,20 @@ namespace planner {
                         for (auto [dx, dy] : diagonal_elements) {
                             auto x = position.x + dx;
                             auto y = position.y + dy;
-                            insert_point(x, y, { 0, 1 });
+                            insert_point(x, y, std::sqrt(2));
                         }
                     } else {
                         for (auto [dx, dy] : diagonal_elements) {
                             auto x = position.x + dx;
                             auto y = position.y + dy;
-                            insert_point(x, y, { 0, 1 }, map.bordered_at(position.x, y) != CellType::obstacle || map.bordered_at(x, position.y) != CellType::obstacle);
+                            insert_point(x, y, std::sqrt(2), map.bordered_at(position.x, y) != CellType::obstacle || map.bordered_at(x, position.y) != CellType::obstacle);
                         }
                     }
                 } else {
                     for (auto [dx, dy] : diagonal_elements) {
                         auto x = position.x + dx;
                         auto y = position.y + dy;
-                        insert_point(x, y, { 0, 1 }, map.bordered_at(position.x, y) != CellType::obstacle && map.bordered_at(x, position.y) != CellType::obstacle);
+                        insert_point(x, y, std::sqrt(2), map.bordered_at(position.x, y) != CellType::obstacle && map.bordered_at(x, position.y) != CellType::obstacle);
                     }
                 }
             }

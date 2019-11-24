@@ -6,7 +6,6 @@
 #include "heuristic.hpp"
 #include "tiebreaker.hpp"
 #include "../map.hpp"  // todo: figure out how to remove relative location dependency
-#include "../quadratic.hpp"
 
 
 namespace planner {
@@ -28,11 +27,11 @@ namespace planner {
 
     struct Node {
         Point position;
-        number distance;
-        number estimation;
+        double distance;
+        double estimation;
         std::shared_ptr<Node> expanded_from;
 
-        Node(Point position, number distance, number estimation, std::shared_ptr<Node> expanded_from = nullptr);
+        Node(Point position, double distance, double estimation, std::shared_ptr<Node> expanded_from = nullptr);
     };
 
     std::ostream& operator << (std::ostream& out, const Node& node);

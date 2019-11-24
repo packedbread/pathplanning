@@ -1,5 +1,6 @@
-#include "tiebreaker.hpp"
+#include "float_compare.hpp"
 #include "interface.hpp"
+#include "tiebreaker.hpp"
 
 
 namespace planner {
@@ -11,16 +12,16 @@ namespace planner {
     }
 
     bool GMax::is_better(const Node& a, const Node& b) const {
-        if (a.distance == b.distance) {
+        if (very_close_equals(a.distance, b.distance)) {
             return finalize(a.position, b.position);
         }
-        return evaluate(a.distance) > evaluate(b.distance);
+        return a.distance > b.distance;
     }
 
     bool GMin::is_better(const Node& a, const Node& b) const {
-        if (a.estimation == b.estimation) {
+        if (very_close_equals(a.estimation, b.estimation)) {
             return finalize(a.position, b.position);
         }
-        return evaluate(a.estimation) > evaluate(b.estimation);
+        return a.estimation > b.estimation;
     }
 }

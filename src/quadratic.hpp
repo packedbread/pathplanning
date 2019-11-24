@@ -60,4 +60,7 @@ namespace planner {
     double evaluate(Quadratic<T, Root<double>> quadratic) {
         return quadratic.real + quadratic.imaginary * Root<double>::value;
     }
+
+    // due to euclidean heuristic, it's impossible to utilize `number` in current form
+    // todo: create another class to handle sqrt(number) without actually taking `sqrt`
 }
