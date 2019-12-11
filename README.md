@@ -79,7 +79,7 @@ Requirements:
 
 
 ## Run executable
-There are several options to run main executable, both with file input and without it:
+There are several options to run main executable, both with file input/output and without it:
 
 1. No files, input xml file is read from standard input (stdin), resulting xml file is printed to standard output (stdout): run execuable without arguments, e.g.:
 
