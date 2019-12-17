@@ -83,20 +83,12 @@ There are several options to run main executable, both with file input/output an
 
 1. No files, input xml file is read from standard input (stdin), resulting xml file is printed to standard output (stdout): run execuable without arguments, e.g.:
 
-    - \*nix: ./path_planning
-    - Windows: path_planning.exe
+    - \*nix: `./path_planning`
+    - Windows: `path_planning.exe`
 
-2. Read from file, output to standard output (stdout): run with 1 argument, input filename, e.g.:
+2. Read from file, output to file with suffix `_log`: run with 1 argument, input filename, e.g.:
 
-    - \*nix: ./path_planning input_file.xml
-    - Windows: path_planning.exe input_file.xml
-
-3. Read from standard input (stdin), output to file: run with 2 arguments, - as first argument and output filename as second, e.g.:
-
-    - \*nix: ./path_planning - output_file.xml
-    - Windows: path_planning.exe - output_file.xml
-
-4. Read from file, output to file: run with 2 arguments, input filename as first argument and output filename as second, e.g.:
-
-    - \*nix: ./path_planning input_file.xml output_file.xml
-    - Windows: path_planning.exe input_file.xml output_file.xml
+    - \*nix: `./path_planning input_file.xml`
+    - Windows: `path_planning.exe input_file.xml`
+    
+    This will create `input_file_log.xml` as a result.
