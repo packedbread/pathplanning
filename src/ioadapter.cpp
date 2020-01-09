@@ -33,7 +33,7 @@ namespace planner {
 
     std::string extract_value_with_default(const pugi::xml_node& node, const std::string& name, const std::string& default_value) {
         if (auto child_node = node.child(name.c_str()); child_node) {
-            return child_node.value();
+            return child_node.first_child().value();
         }
         return default_value;
     }
