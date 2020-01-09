@@ -3,8 +3,10 @@
 #include <iostream>
 #include <sstream>
 #include <stdexcept>
+#include <string>
 #include <vector>
 #include <unordered_set>
+
 #include "ioadapter.hpp"
 
 
@@ -33,7 +35,10 @@ namespace planner {
         auto map_node = document.child("root").child("map");
         size_t width = static_cast<size_t>(std::stoull(map_node.child_value("width")));
         size_t height = static_cast<size_t>(std::stoull(map_node.child_value("height")));
-        double cell_size = static_cast<double>(std::stod(map_node.child_value("cellsize")));
+        double cell_size = 1.0;
+        if (auto cell_size_node = map_node.child_value("cellsize"); cell_size_node) {
+            cell_size = static_cast<double>(std::stod(map_node.child_value("cellsize")));
+        }
         std::vector<int> data;
         data.reserve(width * height);
         for (const auto &row : map_node.child("grid").children()) {

@@ -3,7 +3,7 @@ project(pathp)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_library(pathp
+add_library(pathp STATIC
     pugixml.cpp
     ioadapter.cpp
     map.cpp
