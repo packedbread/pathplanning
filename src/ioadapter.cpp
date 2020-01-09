@@ -31,14 +31,18 @@ namespace planner {
         document.save(output);
     }
 
+    std::string extract_value_with_default(const pugi::xml_node& node, const std::string& name, const std::string& default_value) {
+        if (auto child_node = node.child(name.c_str()); child_node) {
+            return child_node.value();
+        }
+        return default_value;
+    }
+
     GridMap<CellType> IOAdapter::read_map() const {
         auto map_node = document.child("root").child("map");
         size_t width = static_cast<size_t>(std::stoull(map_node.child_value("width")));
         size_t height = static_cast<size_t>(std::stoull(map_node.child_value("height")));
-        double cell_size = 1.0;
-        if (auto cell_size_node = map_node.child_value("cellsize"); cell_size_node) {
-            cell_size = static_cast<double>(std::stod(map_node.child_value("cellsize")));
-        }
+        double cell_size = static_cast<double>(std::stod(extract_value_with_default(map_node, "cellsize", "1.0")));
         std::vector<int> data;
         data.reserve(width * height);
         for (const auto &row : map_node.child("grid").children()) {
@@ -95,13 +99,13 @@ namespace planner {
 
     std::shared_ptr<Search> IOAdapter::read_algorithm() const {
         auto algorithm_node = document.child("root").child("algorithm");
-        auto heuristic = parse_metric(algorithm_node.child_value("metrictype"));
-        auto tie_breaker = parse_tie_breaker(algorithm_node.child_value("breakingties"));
+        auto heuristic = parse_metric(extract_value_with_default(algorithm_node, "metrictype", "euclidean"));
+        auto tie_breaker = parse_tie_breaker(extract_value_with_default(algorithm_node, "breakingties", "g-max"));
         Options options{
-            std::stod(algorithm_node.child_value("hweight")),
-            parse_bool_value(std::string{algorithm_node.child_value("allowdiagonal")}),
-            parse_bool_value(std::string{algorithm_node.child_value("cutcorners")}),
-            parse_bool_value(std::string{algorithm_node.child_value("allowsqueeze")}),
+            std::stod(extract_value_with_default(algorithm_node, "hweight", "1.0")),
+            parse_bool_value(extract_value_with_default(algorithm_node, "allowdiagonal", "true")),
+            parse_bool_value(extract_value_with_default(algorithm_node, "cutcorners", "true")),
+            parse_bool_value(extract_value_with_default(algorithm_node, "allowsqueeze", "true")),
         };
         std::string search_type = algorithm_node.child_value("searchtype");
         if (search_type == "astar") {
@@ -126,6 +130,8 @@ namespace planner {
             root_node.remove_child("log");
         }
         auto log_node = root_node.append_child("log");
+
+        auto mapfilename = log_node.append_child("mapfilename");
 
         auto summary_node = log_node.append_child("summary");
         summary_node.append_attribute("numberofsteps") = result.closed.size() + (result.path.empty() ? 0 : 1);
@@ -160,6 +166,9 @@ namespace planner {
             }
         }
 
+        auto path = log_node.append_child("path");
+        auto lplevel = log_node.append_child("lplevel");
+        auto hplevel = log_node.append_child("hplevel");
     }
 
     double IOAdapter::read_path_length() const {
