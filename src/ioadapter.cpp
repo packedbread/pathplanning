@@ -166,7 +166,6 @@ namespace planner {
             }
         }
 
-        auto path = log_node.append_child("path");
         auto lplevel = log_node.append_child("lplevel");
         auto hplevel = log_node.append_child("hplevel");
     }
