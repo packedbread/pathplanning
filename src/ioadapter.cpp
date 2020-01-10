@@ -76,7 +76,7 @@ namespace planner {
             return std::make_unique<Diagonal<Point>>();
         } else if (text == "manhattan") {
             return std::make_unique<Manhattan<Point>>();
-        } else if (text == "euclidean") {
+        } else if (text == "euclidean" || text == "euclid") {
             return std::make_unique<Euclidean<Point>>();
         } else if (text == "chebyshev") {
             return std::make_unique<Chebyshev<Point>>();
