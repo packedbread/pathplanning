@@ -32,7 +32,6 @@ namespace planner {
             &options = options,
             &open_checker,
             &closed_checker,
-            &state,
             &open,
             &map,
             &to
@@ -45,7 +44,6 @@ namespace planner {
                 &open,
                 &open_checker,
                 &closed_checker,
-                &position,
                 &node,
                 &to
             ](size_t x, size_t y, double distance_change, bool extra_condition = true) -> void {

@@ -5,8 +5,10 @@ set(CMAKE_CXX_STANDARD 17)
 
 add_executable(path_planning src/main.cpp)
 
-if (!APPLE)
-    set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static")
+if (${MINGW})
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -static -static-libgcc -static-libstdc++")
+else()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
 endif()
 
 add_subdirectory(src)

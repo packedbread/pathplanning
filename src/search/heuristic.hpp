@@ -7,6 +7,7 @@ namespace planner {
     template <typename Point>
     struct Heuristic {
         [[nodiscard]] virtual double operator ()(Point a, Point b) const = 0;
+        virtual ~Heuristic() = default;
     };
 
     // todo: decouple dependency on 2 component vector with fields `x`, `y`

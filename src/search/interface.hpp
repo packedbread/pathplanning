@@ -70,5 +70,7 @@ namespace planner {
         [[nodiscard]] const Options& get_options() const;
 
         [[nodiscard]] virtual SearchState search(Point from, Point to, const GridMap<CellType>& map) const = 0;
+
+        virtual ~Search() = default;
     };
 }
