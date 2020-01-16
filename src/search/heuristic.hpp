@@ -16,7 +16,7 @@ namespace planner {
         [[nodiscard]] double operator ()(Point a, Point b) const override {
             auto dx = std::max(a.x, b.x) - std::min(a.x, b.x);
             auto dy = std::max(a.y, b.y) - std::min(a.y, b.y);
-            return static_cast<int>(std::max(dx, dy) - std::min(dx, dy)) + std::sqrt(2) * static_cast<int>(std::min(dx, dy));
+            return static_cast<double>(std::max(dx, dy) - std::min(dx, dy)) + std::sqrt(2) * static_cast<double>(std::min(dx, dy));
         }
     };
 

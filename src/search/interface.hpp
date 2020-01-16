@@ -37,6 +37,7 @@ namespace planner {
     std::ostream& operator << (std::ostream& out, const Node& node);
 
     struct SearchState {
+        bool path_found;
         std::list<std::shared_ptr<Node>> path;
         std::list<std::shared_ptr<Node>> open;
         std::list<std::shared_ptr<Node>> closed;

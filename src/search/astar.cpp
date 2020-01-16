@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
+#include <set>
 
 
 namespace planner {
@@ -61,6 +62,7 @@ namespace planner {
                         if (node->distance + distance_change < node_ptr->distance) {
                             node_ptr->distance = node->distance + distance_change;
                             node_ptr->expanded_from = node;
+                            open.push(node_ptr);
                         }
                     }
                 }
@@ -100,6 +102,7 @@ namespace planner {
         while (!open.empty()) {
             auto optimal = open.top();
             if (optimal->position == to) {
+                state.path_found = true;
                 break;
             }
             open.pop();
@@ -109,14 +112,15 @@ namespace planner {
             state.closed.emplace_back(std::move(optimal));
         }
 
-        if (!open.empty()) {
+        if (state.path_found) {
             auto optimal = open.top();
             while (optimal != nullptr) {
                 state.path.push_front(optimal);
                 optimal = optimal->expanded_from;
             }
             const auto& container = access_container(open);
-            state.open = { std::begin(container), std::end(container) };
+            std::set<std::shared_ptr<Node>> unique_open{ std::begin(container), std::end(container) };  // todo: remove this after PQ replaced with something else
+            state.open = { std::begin(unique_open), std::end(unique_open) };
         }
 
         auto end_time = std::chrono::high_resolution_clock::now();
