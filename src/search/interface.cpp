@@ -64,6 +64,6 @@ namespace planner {
         if (very_close_equals(a->distance + search.options.heuristic_weight * a->estimation, b->distance + search.options.heuristic_weight * b->estimation)) {
             return search.tie_breaker->is_better(*b, *a);
         }
-        return a->distance + search.options.heuristic_weight * a->estimation > b->distance + search.options.heuristic_weight * b->estimation;
+        return a->distance + search.options.heuristic_weight * a->estimation * (1.0 - 1e-4) > b->distance + search.options.heuristic_weight * b->estimation * (1.0 - 1e-4);
     }
 }

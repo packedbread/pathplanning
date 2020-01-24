@@ -66,20 +66,20 @@ namespace planner {
                         for (auto [dx, dy] : diagonal_elements) {
                             auto x = position.x + dx;
                             auto y = position.y + dy;
-                            insert_point(x, y, std::sqrt(2));
+                            insert_point(x, y, static_cast<double>(std::sqrtl(2)));
                         }
                     } else {
                         for (auto [dx, dy] : diagonal_elements) {
                             auto x = position.x + dx;
                             auto y = position.y + dy;
-                            insert_point(x, y, std::sqrt(2), map.bordered_at(position.x, y) != CellType::obstacle || map.bordered_at(x, position.y) != CellType::obstacle);
+                            insert_point(x, y, static_cast<double>(std::sqrtl(2)), map.bordered_at(position.x, y) != CellType::obstacle || map.bordered_at(x, position.y) != CellType::obstacle);
                         }
                     }
                 } else {
                     for (auto [dx, dy] : diagonal_elements) {
                         auto x = position.x + dx;
                         auto y = position.y + dy;
-                        insert_point(x, y, std::sqrt(2), map.bordered_at(position.x, y) != CellType::obstacle && map.bordered_at(x, position.y) != CellType::obstacle);
+                        insert_point(x, y, static_cast<double>(std::sqrtl(2)), map.bordered_at(position.x, y) != CellType::obstacle && map.bordered_at(x, position.y) != CellType::obstacle);
                     }
                 }
             }

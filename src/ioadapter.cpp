@@ -167,7 +167,61 @@ namespace planner {
         }
 
         auto lplevel = log_node.append_child("lplevel");
+        {
+            size_t number = 0;
+            for (const auto& path_node : result.path) {
+                auto node = lplevel.append_child("node");
+                node.append_attribute("x").set_value(path_node->position.x);
+                node.append_attribute("y").set_value(path_node->position.y);
+                node.append_attribute("number").set_value(number);
+                ++number;
+            }
+        }
         auto hplevel = log_node.append_child("hplevel");
+        if (result.path.size() == 1) {
+            const auto& path_node = result.path.front();
+            pugi::xml_node section = hplevel.append_child("section");
+            section.append_attribute("number").set_value(0);
+            section.append_attribute("start.x").set_value(path_node->position.x);
+            section.append_attribute("start.y").set_value(path_node->position.y);
+            section.append_attribute("finish.x").set_value(path_node->position.x);
+            section.append_attribute("finish.y").set_value(path_node->position.y);
+            section.append_attribute("length").set_value(0);
+        } else if (result.path.size() > 1) {
+            size_t section_number = 0;
+            auto prev_path_node = result.path.front();
+            pugi::xml_node section = hplevel.append_child("section");
+            section.append_attribute("number").set_value(section_number);
+            section.append_attribute("start.x").set_value(prev_path_node->position.x);
+            section.append_attribute("start.y").set_value(prev_path_node->position.y);
+            auto cit = std::next(std::begin(result.path));
+            int dx = static_cast<int>((*cit)->position.x - prev_path_node->position.x);
+            int dy = static_cast<int>((*cit)->position.y - prev_path_node->position.y);
+            double current_path_length = 0.0;
+            for (; cit != std::end(result.path); ++cit) {
+                int current_dx = static_cast<int>((*cit)->position.x - prev_path_node->position.x);
+                int current_dy = static_cast<int>((*cit)->position.y - prev_path_node->position.y);
+                if (current_dx == dx && current_dy == dy) {
+                    current_path_length += std::sqrt(dx * dx + dy * dy);
+                } else {
+                    section.append_attribute("finish.x").set_value(prev_path_node->position.x);
+                    section.append_attribute("finish.y").set_value(prev_path_node->position.y);
+                    section.append_attribute("length").set_value(current_path_length);
+                    ++section_number;
+                    section = hplevel.append_child("section");
+                    section.append_attribute("number").set_value(section_number);
+                    section.append_attribute("start.x").set_value(prev_path_node->position.x);
+                    section.append_attribute("start.y").set_value(prev_path_node->position.y);
+                    dx = current_dx;
+                    dy = current_dy;
+                    current_path_length = std::sqrt(dx * dx + dy * dy);
+                }
+                prev_path_node = *cit;
+            }
+            section.append_attribute("finish.x").set_value(prev_path_node->position.x);
+            section.append_attribute("finish.y").set_value(prev_path_node->position.y);
+            section.append_attribute("length").set_value(current_path_length);
+        }
     }
 
     double IOAdapter::read_path_length() const {
