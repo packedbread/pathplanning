@@ -45,7 +45,7 @@ namespace planner {
                         open_checker[{ x, y }] = node_ptr;
                     } else {
                         auto node_ptr = open_checker[{ x, y }];
-                        if (node->distance + distance_change - node_ptr->distance < -1e-9) {
+                        if (node->distance + distance_change - node_ptr->distance < -1e-5) {
                             node_ptr->distance = node->distance + distance_change;
                             node_ptr->expanded_from = node;
                             open.push(node_ptr);
