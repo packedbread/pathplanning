@@ -28,26 +28,12 @@ namespace planner {
         std::unordered_map<Point, std::shared_ptr<Node>> open_checker{ { from, node_ptr } };
         std::unordered_set<Point> closed_checker;
 
-        auto expand = [
-            &heuristic = heuristic,
-            &options = options,
-            &open_checker,
-            &closed_checker,
-            &open,
-            &map,
-            &to
-        ](const std::shared_ptr<Node>& node) -> void {
+        auto expand = [&heuristic = heuristic, &options = options, &open_checker, &closed_checker, &open, &map, &to]
+                (const std::shared_ptr<Node>& node) -> void {
             const auto& position = node->position;
 
-            auto insert_point = [
-                &heuristic,
-                &map,
-                &open,
-                &open_checker,
-                &closed_checker,
-                &node,
-                &to
-            ](size_t x, size_t y, double distance_change, bool extra_condition = true) -> void {
+            auto insert_point = [&heuristic, &map, &open, &open_checker, &closed_checker, &node, &to]
+                    (size_t x, size_t y, double distance_change, bool extra_condition = true) -> void {
                 if (
                     map.bordered_at(x, y) != CellType::obstacle &&
                     closed_checker.find({ x, y }) == std::end(closed_checker) &&
@@ -59,7 +45,7 @@ namespace planner {
                         open_checker[{ x, y }] = node_ptr;
                     } else {
                         auto node_ptr = open_checker[{ x, y }];
-                        if (node->distance + distance_change < node_ptr->distance) {
+                        if (node->distance + distance_change - node_ptr->distance < -1e-9) {
                             node_ptr->distance = node->distance + distance_change;
                             node_ptr->expanded_from = node;
                             open.push(node_ptr);
