@@ -61,9 +61,9 @@ namespace planner {
     bool Search::Comparator::operator () (const std::shared_ptr<Node>& a, const std::shared_ptr<Node>& b) const {
         // order of operands is changed intentionally, due to priority queue nature
         // of returning elements with highest priority first, but using a strict weak ordering
-        if (very_close_equals(a->distance + search.options.heuristic_weight * a->estimation, b->distance + search.options.heuristic_weight * b->estimation)) {
+        if (very_close_equals(a->distance + search.options.heuristic_weight * a->estimation * (1.0 - 1e-3), b->distance + search.options.heuristic_weight * b->estimation * (1.0 - 1e-3))) {
             return search.tie_breaker->is_better(*b, *a);
         }
-        return a->distance + search.options.heuristic_weight * a->estimation * (1.0 - 1e-4) > b->distance + search.options.heuristic_weight * b->estimation * (1.0 - 1e-4);
+        return a->distance + search.options.heuristic_weight * a->estimation * (1.0 - 1e-3) > b->distance + search.options.heuristic_weight * b->estimation * (1.0 - 1e-3);
     }
 }
