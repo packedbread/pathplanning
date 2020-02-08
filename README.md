@@ -5,13 +5,14 @@
 
 Implementation of path planning algorithms. Given an xml document, this program can find a path from one point to another and output it into an xml document. Several algorithms are supported with a number of heuristics and options.
 
-Requirements:
-- c++ compiler with c++17 support, including std::filesystem
+## Build
+### Requirements:
+- c++ compiler with c++17 support, including std::filesystem, for example gcc-9
 - cmake >= 3.15
 - boost >= 1.71.0
   - only unit_test_framework component is required
 
-## Build
+
 ### Debian build
 1. Install cmake: https://cmake.org/download/
 
