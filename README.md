@@ -92,3 +92,53 @@ There are several options to run main executable, both with file input/output an
     - Windows: `path_planning.exe input_file.xml`
     
     This will create `input_file_log.xml` as a result.
+
+
+## Input format
+Input is in XML format. Example:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<root>
+    <map> <!--map parameters-->
+        <width>3</width> <!--Width of the map-->
+        <height>1</height> <!--Height of the map-->
+        <cellsize>1</cellsize> <!--Size of single item in the row-->
+        <startx>0</startx> <!--Start position x coordinate-->
+        <starty>0</starty> <!--Start position y coordinate-->
+        <finishx>1</finishx> <!--Finish position x coordinate-->
+        <finishy>0</finishy> <!--Finish position y coordinate-->
+        <grid> <!--Map representation-->
+            <row>0 0 1</row> <!--Row values, allowed values: 0 - clear, 1 - obstacle-->
+        </grid>
+    </map>
+    <algorithm> <!--Algorithm options-->
+        <searchtype>astar</searchtype> <!--Type of the algorithm, allowed values are: dijkstra, astar-->
+        <metrictype>euclid</metrictype> <!--Heuristic type, allowed values are: diagonal, euclid, manhattan, chebyshev-->
+        <breakingties>g-max</breakingties> <!--Tie breaker type, allowed values are: g-max, g-min-->
+        <hweight>1</hweight> <!--Heuristic weight in distance estimation calculation, allowed values: floating point values-->
+        <allowdiagonal>true</allowdiagonal> <!--Are diagonal moves allowed, allowed values: true, false-->
+        <cutcorners>true</cutcorners> <!--Is corner cutting allowed, allowed values: true, false-->
+        <allowsqueeze>true</allowsqueeze> <!--Is squeezing allowed, allowed values: true, false-->
+    </algorithm>
+    <options> <!--Program options-->
+        <loglevel>1</loglevel> <!--Logging verbosity, allowed values are 0, 0.5, 1, 1.5, 2-->
+    </options>
+</root>
+```
+Other examples can be found in tests.
+
+## Output format
+Output is also in XML format. It will contain all of the input and several other tags. Example of added tags:
+```xml
+<root>
+    <log> <!--Program output information-->
+        <summary numberofsteps="350" nodescreated="400" length="29.384777" length_scaled="705.23464965820312" time="0.000000"/> <!--Summary of the result, will contain numberofsteps (number of expanded nodes during the search), nodescreated (number of created nodes during the search), length (distance of the found path), length_scaled (length multiplied by cell size), time (search time)-->
+        <path> <!--Path on the map-->
+            <row number="0">* * 1</row> <!--'*' character marks the path-->
+        </path>
+        <lplevel/> <!--Path nodes info-->
+        <hplevel/> <!--Path section info-->
+    </log>
+</root>
+```
