@@ -3,13 +3,16 @@
 [![Build Status](https://travis-ci.com/packedbread/pathplanning.svg?branch=master)](https://travis-ci.com/packedbread/pathplanning)
 [![Build status](https://ci.appveyor.com/api/projects/status/94tqu36hlpy5i23d/branch/master?svg=true)](https://ci.appveyor.com/project/packedbread/pathplanning/branch/master)
 
-Requirements:
-- c++ compiler with c++17 support, including std::filesystem
+Implementation of path planning algorithms. Given an xml document, this program can find a path from one point to another and output it into an xml document. Several algorithms are supported with a number of heuristics and options.
+
+## Build
+### Requirements:
+- c++ compiler with c++17 support, including std::filesystem, for example gcc-9
 - cmake >= 3.15
 - boost >= 1.71.0
   - only unit_test_framework component is required
 
-## Build
+
 ### Debian build
 1. Install cmake: https://cmake.org/download/
 
