@@ -55,14 +55,6 @@ namespace planner {
         std::shared_ptr<Heuristic<Point>> heuristic;
         std::shared_ptr<TieBreaker> tie_breaker;
         Options options;
-
-        struct Comparator {
-            const Search& search;
-
-            Comparator(const Search& search);
-
-            [[nodiscard]] bool operator () (const std::shared_ptr<Node>& a, const std::shared_ptr<Node>& b) const;
-        };
     public:
         Search(std::shared_ptr<Heuristic<Point>> heuristic, std::shared_ptr<TieBreaker> tie_breaker, const Options& options);
 
