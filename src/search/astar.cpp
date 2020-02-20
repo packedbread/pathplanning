@@ -126,9 +126,10 @@ namespace {
                     if (!cut_corners) {
                         continue;
                     }
-                } else if (is_squeeze_move(position, delta)) {
-                    if (!allow_squeeze) {
-                        continue;
+                    if (is_squeeze_move(position, delta)) {
+                        if (!allow_squeeze) {
+                            continue;
+                        }
                     }
                 }
                 next_positions.emplace_back(next, std::sqrt(2));  // todo: move `sqrt(2)` and `1` logic to metric distance determination
