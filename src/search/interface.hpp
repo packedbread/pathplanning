@@ -43,7 +43,48 @@ namespace planner {
         std::list<std::shared_ptr<Node>> closed;
         std::chrono::high_resolution_clock::duration time_spent;
 
+        std::list<std::list<std::shared_ptr<Node>>> open_history;  // todo: this is messy, move to explicit struct
+        std::list<std::list<std::shared_ptr<Node>>> closed_history;
+
         [[nodiscard]] double path_length() const;
+    };
+
+    struct LogOptions {
+        std::string log_level;
+        std::string log_path;
+        std::string log_filename;
+
+        inline bool is_level_none() const {
+            return log_level == "0" || log_level == "none";
+        }
+        inline bool is_level_tiny() const {
+            return log_level == "0.5" || log_level == "tiny";
+        }
+        inline bool is_level_short() const {
+            return log_level == "1" || log_level == "short";
+        }
+        inline bool is_level_medium() const {
+            return log_level == "1.5" || log_level == "medium";
+        }
+        inline bool is_level_full() const {
+            return log_level == "2" || log_level == "full";
+        }
+
+        inline bool is_level_at_least_none() const {
+            return is_level_none() || is_level_at_least_tiny();
+        }
+        inline bool is_level_at_least_tiny() const {
+            return is_level_tiny() || is_level_at_least_short();
+        }
+        inline bool is_level_at_least_short() const {
+            return is_level_short() || is_level_at_least_medium();
+        }
+        inline bool is_level_at_least_medium() const {
+            return is_level_medium() || is_level_at_least_full();
+        }
+        inline bool is_level_at_least_full() const {
+            return is_level_full();
+        }
     };
 
     // todo: refactor Search to accept heuristic, tie breaker and options as template parameters
@@ -62,7 +103,7 @@ namespace planner {
         [[nodiscard]] const std::shared_ptr<TieBreaker>& get_tie_breaker() const;
         [[nodiscard]] const Options& get_options() const;
 
-        [[nodiscard]] virtual SearchState search(Point from, Point to, const GridMap<CellType>& map) const = 0;
+        [[nodiscard]] virtual SearchState search(Point from, Point to, const GridMap<CellType>& map, bool store_history = false) const = 0;
 
         virtual ~Search() = default;
     };

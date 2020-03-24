@@ -172,7 +172,7 @@ namespace {
 
 
 namespace planner {
-    SearchState AStar::search(Point from, Point to, const GridMap<CellType>& map) const {
+    SearchState AStar::search(Point from, Point to, const GridMap<CellType>& map, bool store_history) const {
         auto start_time = std::chrono::high_resolution_clock::now();
 
         NodePtrComparator comparator{ options.heuristic_weight, *tie_breaker };
@@ -191,6 +191,10 @@ namespace planner {
             search_space.close(optimal->position);
             expand(optimal, map, *heuristic, to, search_space, options.allow_diagonal, options.cut_corners, options.allow_squeeze);
             state.closed.push_back(optimal);
+            if (store_history) {
+                state.open_history.emplace_back(std::begin(search_space.storage), std::end(search_space.storage));
+                state.closed_history.push_back(state.closed);
+            }
         }
 
         if (state.path_found) {
@@ -199,6 +203,11 @@ namespace planner {
                 state.path.push_front(optimal);
                 optimal = optimal->expanded_from;
             }
+
+            optimal = search_space.optimal();
+            search_space.erase_optimal();
+            search_space.close(optimal->position);
+            state.closed.push_back(optimal);
             state.open = { std::begin(search_space.storage), std::end(search_space.storage) };
         }
 

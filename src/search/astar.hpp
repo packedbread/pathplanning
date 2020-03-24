@@ -7,6 +7,6 @@ namespace planner {
     public:
         using Search::Search;
 
-        [[nodiscard]] SearchState search(Point from, Point to, const GridMap<CellType>& map) const override;
+        [[nodiscard]] SearchState search(Point from, Point to, const GridMap<CellType>& map,  bool store_history = false) const override;
     };
 }

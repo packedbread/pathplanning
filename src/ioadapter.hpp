@@ -20,7 +20,8 @@ namespace planner {
         [[nodiscard]] std::pair<Point, Point> read_locations() const;
         [[nodiscard]] std::shared_ptr<Search> read_algorithm() const;
         [[nodiscard]] double read_path_length() const;  // todo: replace this with reading full log node
+        [[nodiscard]] LogOptions read_log_options() const;
 
-        void write_result(const SearchState& result, const GridMap<CellType>& map);  // todo: remove map parameter
+        void write_result(const SearchState& result, std::string input_filename, const GridMap<CellType>& map, const LogOptions& log_options);  // todo: remove map parameter
     };
 }

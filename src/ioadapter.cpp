@@ -124,23 +124,50 @@ namespace planner {
         throw std::logic_error{ "unknown search type: " + search_type };
     }
 
-    void IOAdapter::write_result(const SearchState& result, const GridMap<CellType>& map) {
+    void write_node(pugi::xml_node& parent_node, const std::shared_ptr<Node>& node) {
+        auto child_node = parent_node.append_child("node");
+        child_node.append_attribute("x").set_value(node->position.x);
+        child_node.append_attribute("y").set_value(node->position.y);
+        child_node.append_attribute("F").set_value(node->distance);
+        child_node.append_attribute("g").set_value(node->estimation);
+        if (node->expanded_from != nullptr) {
+            child_node.append_attribute("parent_x").set_value(node->expanded_from->position.x);
+            child_node.append_attribute("parent_y").set_value(node->expanded_from->position.y);
+        }
+    }
+
+    void write_step(pugi::xml_node& lowlevel_node, size_t step, const std::list<std::shared_ptr<Node>>& open, const std::list<std::shared_ptr<Node>>& closed) {
+        auto step_node = lowlevel_node.append_child("step");
+        step_node.append_attribute("number").set_value(step);
+        auto open_node = step_node.append_child("open");
+        for (const auto& node : open) {
+            write_node(open_node, node);
+        }
+        auto close_node = step_node.append_child("close");
+        for (const auto& node : closed) {
+            write_node(close_node, node);
+        }
+    }
+
+    void IOAdapter::write_result(const SearchState& result, std::string input_filename, const GridMap<CellType>& map, const LogOptions& log_options) {
         auto root_node = document.child("root");
         while (root_node.find_node([](const pugi::xml_node& p) { return std::string{ p.name() } == "log"; })) {
             root_node.remove_child("log");
         }
         auto log_node = root_node.append_child("log");
 
-        auto mapfilename = log_node.append_child("mapfilename");
+        log_node.append_child("mapfilename").set_value(input_filename.data());
 
         auto summary_node = log_node.append_child("summary");
-        summary_node.append_attribute("numberofsteps") = result.closed.size() + (result.path.empty() ? 0 : 1);
-        summary_node.append_attribute("nodescreated") = result.closed.size() + result.open.size();
-        summary_node.append_attribute("length") = result.path_length();
-        summary_node.append_attribute("length_scaled") = result.path_length() * map.get_cell_size();
-        summary_node.append_attribute("time") = std::chrono::duration_cast<std::chrono::nanoseconds>(result.time_spent).count() / 1e9;
+        if (log_options.is_level_at_least_tiny()) {
+            summary_node.append_attribute("numberofsteps") = result.closed.size() + (result.path.empty() ? 0 : 1);
+            summary_node.append_attribute("nodescreated") = result.closed.size() + result.open.size();
+            summary_node.append_attribute("length") = result.path_length();
+            summary_node.append_attribute("length_scaled") = result.path_length() * map.get_cell_size();
+            summary_node.append_attribute("time") = std::chrono::duration_cast<std::chrono::nanoseconds>(result.time_spent).count() / 1e9;
+        }
 
-        if (map.get_width() != 0 && map.get_height() != 0) {
+        if (log_options.is_level_at_least_short() && map.get_width() != 0 && map.get_height() != 0) {
             auto path_node = log_node.append_child("path");
             std::unordered_set<Point> path_points;
             for (const auto& ptr : result.path) {
@@ -167,7 +194,7 @@ namespace planner {
         }
 
         auto lplevel = log_node.append_child("lplevel");
-        {
+        if (log_options.is_level_at_least_short()) {
             size_t number = 0;
             for (const auto& path_node : result.path) {
                 auto node = lplevel.append_child("node");
@@ -178,54 +205,79 @@ namespace planner {
             }
         }
         auto hplevel = log_node.append_child("hplevel");
-        if (result.path.size() == 1) {
-            const auto& path_node = result.path.front();
-            pugi::xml_node section = hplevel.append_child("section");
-            section.append_attribute("number").set_value(0);
-            section.append_attribute("start.x").set_value(path_node->position.x);
-            section.append_attribute("start.y").set_value(path_node->position.y);
-            section.append_attribute("finish.x").set_value(path_node->position.x);
-            section.append_attribute("finish.y").set_value(path_node->position.y);
-            section.append_attribute("length").set_value(0);
-        } else if (result.path.size() > 1) {
-            size_t section_number = 0;
-            auto prev_path_node = result.path.front();
-            pugi::xml_node section = hplevel.append_child("section");
-            section.append_attribute("number").set_value(section_number);
-            section.append_attribute("start.x").set_value(prev_path_node->position.x);
-            section.append_attribute("start.y").set_value(prev_path_node->position.y);
-            auto cit = std::next(std::begin(result.path));
-            int dx = static_cast<int>((*cit)->position.x - prev_path_node->position.x);
-            int dy = static_cast<int>((*cit)->position.y - prev_path_node->position.y);
-            double current_path_length = 0.0;
-            for (; cit != std::end(result.path); ++cit) {
-                int current_dx = static_cast<int>((*cit)->position.x - prev_path_node->position.x);
-                int current_dy = static_cast<int>((*cit)->position.y - prev_path_node->position.y);
-                if (current_dx == dx && current_dy == dy) {
-                    current_path_length += std::sqrt(dx * dx + dy * dy);
-                } else {
-                    section.append_attribute("finish.x").set_value(prev_path_node->position.x);
-                    section.append_attribute("finish.y").set_value(prev_path_node->position.y);
-                    section.append_attribute("length").set_value(current_path_length);
-                    ++section_number;
-                    section = hplevel.append_child("section");
-                    section.append_attribute("number").set_value(section_number);
-                    section.append_attribute("start.x").set_value(prev_path_node->position.x);
-                    section.append_attribute("start.y").set_value(prev_path_node->position.y);
-                    dx = current_dx;
-                    dy = current_dy;
-                    current_path_length = std::sqrt(dx * dx + dy * dy);
+        if (log_options.is_level_at_least_short()) {
+            if (result.path.size() == 1) {
+                const auto& path_node = result.path.front();
+                pugi::xml_node section = hplevel.append_child("section");
+                section.append_attribute("number").set_value(0);
+                section.append_attribute("start.x").set_value(path_node->position.x);
+                section.append_attribute("start.y").set_value(path_node->position.y);
+                section.append_attribute("finish.x").set_value(path_node->position.x);
+                section.append_attribute("finish.y").set_value(path_node->position.y);
+                section.append_attribute("length").set_value(0);
+            } else if (result.path.size() > 1) {
+                size_t section_number = 0;
+                auto prev_path_node = result.path.front();
+                pugi::xml_node section = hplevel.append_child("section");
+                section.append_attribute("number").set_value(section_number);
+                section.append_attribute("start.x").set_value(prev_path_node->position.x);
+                section.append_attribute("start.y").set_value(prev_path_node->position.y);
+                auto cit = std::next(std::begin(result.path));
+                int dx = static_cast<int>((*cit)->position.x - prev_path_node->position.x);
+                int dy = static_cast<int>((*cit)->position.y - prev_path_node->position.y);
+                double current_path_length = 0.0;
+                for (; cit != std::end(result.path); ++cit) {
+                    int current_dx = static_cast<int>((*cit)->position.x - prev_path_node->position.x);
+                    int current_dy = static_cast<int>((*cit)->position.y - prev_path_node->position.y);
+                    if (current_dx == dx && current_dy == dy) {
+                        current_path_length += std::sqrt(dx * dx + dy * dy);
+                    } else {
+                        section.append_attribute("finish.x").set_value(prev_path_node->position.x);
+                        section.append_attribute("finish.y").set_value(prev_path_node->position.y);
+                        section.append_attribute("length").set_value(current_path_length);
+                        ++section_number;
+                        section = hplevel.append_child("section");
+                        section.append_attribute("number").set_value(section_number);
+                        section.append_attribute("start.x").set_value(prev_path_node->position.x);
+                        section.append_attribute("start.y").set_value(prev_path_node->position.y);
+                        dx = current_dx;
+                        dy = current_dy;
+                        current_path_length = std::sqrt(dx * dx + dy * dy);
+                    }
+                    prev_path_node = *cit;
                 }
-                prev_path_node = *cit;
+                section.append_attribute("finish.x").set_value(prev_path_node->position.x);
+                section.append_attribute("finish.y").set_value(prev_path_node->position.y);
+                section.append_attribute("length").set_value(current_path_length);
             }
-            section.append_attribute("finish.x").set_value(prev_path_node->position.x);
-            section.append_attribute("finish.y").set_value(prev_path_node->position.y);
-            section.append_attribute("length").set_value(current_path_length);
+        }
+
+        size_t step_counter = 0;
+        auto lowlevel = log_node.append_child("lowlevel");
+        if (log_options.is_level_at_least_full()) {
+            for (auto it_open = result.open_history.begin(), it_closed = result.closed_history.begin();
+                it_open != result.open_history.end() && it_closed != result.closed_history.end();
+                ++it_open, ++it_closed, ++step_counter) {
+                write_step(lowlevel, step_counter, *it_open, *it_closed);
+            }
+        }
+
+        if (log_options.is_level_at_least_medium()) {
+            write_step(lowlevel, step_counter, result.open, result.closed);
         }
     }
 
     double IOAdapter::read_path_length() const {
         auto summary_node = document.child("root").child("log").child("summary");
         return std::stod(summary_node.attribute("length").value());
+    }
+
+    LogOptions IOAdapter::read_log_options() const {
+        LogOptions log_options;
+        auto options_node = document.child("root").child("options");
+        log_options.log_level = extract_value_with_default(options_node, "loglevel", "1");
+        log_options.log_path = extract_value_with_default(options_node, "logpath", "");
+        log_options.log_filename = extract_value_with_default(options_node, "logfilename", "");
+        return log_options;
     }
 }
