@@ -142,6 +142,7 @@ Output is also in XML format. It will contain all of the input and several other
         </path>
         <lplevel/> <!--Path nodes info-->
         <hplevel/> <!--Path section info-->
+        <lowlevel/> <!--Open and Closed lists history info-->
     </log>
 </root>
 ```
