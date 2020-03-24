@@ -160,7 +160,7 @@ namespace planner {
 
         auto summary_node = log_node.append_child("summary");
         if (log_options.is_level_at_least_tiny()) {
-            summary_node.append_attribute("numberofsteps") = result.closed.size() + (result.path.empty() ? 0 : 1);
+            summary_node.append_attribute("numberofsteps") = result.closed.size();
             summary_node.append_attribute("nodescreated") = result.closed.size() + result.open.size();
             summary_node.append_attribute("length") = result.path_length();
             summary_node.append_attribute("length_scaled") = result.path_length() * map.get_cell_size();
