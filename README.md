@@ -126,6 +126,8 @@ Input is in XML format. Example:
     </algorithm>
     <options> <!--Program options-->
         <loglevel>1</loglevel> <!--Logging verbosity, allowed values are 0, 0.5, 1, 1.5, 2-->
+        <logpath></logpath> <!--Log directory-->
+        <logfilename></logfilename> <!--Log file name-->
     </options>
 </root>
 ```
