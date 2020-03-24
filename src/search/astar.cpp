@@ -127,7 +127,7 @@ namespace {
                         continue;
                     }
                 } else if (is_squeeze_move(position, delta)) {
-                    if (!allow_squeeze) {
+                    if (!cut_corners || !allow_squeeze) {
                         continue;
                     }
                 }
