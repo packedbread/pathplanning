@@ -128,8 +128,8 @@ namespace planner {
         auto child_node = parent_node.append_child("node");
         child_node.append_attribute("x").set_value(node->position.x);
         child_node.append_attribute("y").set_value(node->position.y);
-        child_node.append_attribute("F").set_value(node->distance);
-        child_node.append_attribute("g").set_value(node->estimation);
+        child_node.append_attribute("F").set_value(node->distance + node->estimation);
+        child_node.append_attribute("g").set_value(node->distance);
         if (node->expanded_from != nullptr) {
             child_node.append_attribute("parent_x").set_value(node->expanded_from->position.x);
             child_node.append_attribute("parent_y").set_value(node->expanded_from->position.y);
@@ -156,7 +156,7 @@ namespace planner {
         }
         auto log_node = root_node.append_child("log");
 
-        log_node.append_child("mapfilename").set_value(input_filename.data());
+        log_node.append_child("mapfilename").append_child(pugi::node_pcdata).set_value(input_filename.data());
 
         auto summary_node = log_node.append_child("summary");
         if (log_options.is_level_at_least_tiny()) {

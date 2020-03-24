@@ -13,7 +13,7 @@ int main(int argc, char** argv) {
     auto search = adapter.read_algorithm();
     auto log_options = adapter.read_log_options();
     auto result = search->search(locations.first, locations.second, map, log_options.is_level_at_least_full());
-    adapter.write_result(result, argc < 2 ? "" : std::string{ argv[1] }, map, log_options);
+    adapter.write_result(result, argc < 2 ? "123" : std::string{ argv[1] }, map, log_options);
     if (argc < 2) {
         adapter.save_document(std::cout);
     } else {
