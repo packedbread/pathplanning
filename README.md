@@ -148,3 +148,36 @@ Output is also in XML format. It will contain all of the input and several other
     </log>
 </root>
 ```
+For examples of output format refer to tests.
+
+## Supported heuristics
+There are currently 4 supported heuristics: 
+- diagonal
+- euclid
+- manhattan
+- chebyshev
+
+Assuming `dx` and `dy` are absolute values of distance difference between starting point and goal point, the heuristics are calculated in the following way:
+- `diagonal = |dx - dy| + sqrt(2) * min(dx, dy)`
+- `euclid = sqrt(dx^2 + dy^2)`
+- `manhattan = dx + dy`
+- `chebyshev = max(dx, dy)`
+
+### Heuristic weight
+Parameter `hweight` in the input document can be used to adjust the weight of heuristic estimation in the total distance estimation. Concretly:
+
+`Total distance estimation = actual distance + hweight * heuristic estimate`
+
+So by changing the value of `hweight` parameter you can adjust the importance of the heuristic in distance estimation.
+
+Recommended value is 1, it is also the default value. It gives highest speed while providing strong guarantees on the result. Values from 0 to 1 will still provide the same guarantees for the resulting path, but will expand more nodes during the search, leading to higher memory and time usage. 
+
+### Tie breakers
+Currently there are two tie breakers:
+- `g-max`
+- `g-min`
+
+`g-max` tie breaker would prefer node with higher actual distance. `g-min` - with higher heurstic estimate.
+
+For more information on heuristic weights and tie breakers refer to this comprehensive guide page:
+http://theory.stanford.edu/~amitp/GameProgramming/Heuristics.html
