@@ -28,7 +28,7 @@ Implementation of path planning algorithms. Given an xml document, this program 
     one of:
     - `export BUILD=Debug`
     - `export BUILD=Release`
-    
+
     `export BUILD_DIR=${BUILD}-Build`
 
 4. Configure cmake (while in root repo directory):
@@ -59,13 +59,13 @@ Implementation of path planning algorithms. Given an xml document, this program 
     one of:
     - `SET BUILD_TYPE=Debug`
     - `SET BUILD_TYPE=Release`
-    
+
     `SET BOOST_ROOT=C:\Path\to\boost_1_71_0`
 
 5. Configure cmake (while in root repo directory):
-    
+
     `cmake -G "MinGW Makefiles" -S . -B %BUILD_TYPE%-Build -D CMAKE_BUILD_TYPE=%BUILD_TYPE%`
-    
+
 6. Build
 
     `cmake --build %BUILD_TYPE%-Build --target path_planning`
@@ -77,7 +77,7 @@ Implementation of path planning algorithms. Given an xml document, this program 
 8. Run tests (optional):
 
     `cd %BUILD_TYPE%-Build\tests`
-    
+
     `tests.exe --log_level=all`
 
 
@@ -93,7 +93,7 @@ There are several options to run main executable, both with file input/output an
 
     - \*nix: `./path_planning input_file.xml`
     - Windows: `path_planning.exe input_file.xml`
-    
+
     This will create `input_file_log.xml` as a result.
 
 
@@ -151,7 +151,7 @@ Output is also in XML format. It will contain all of the input and several other
 For examples of output format refer to tests.
 
 ## Supported heuristics
-There are currently 4 supported heuristics: 
+There are currently 4 supported heuristics:
 - diagonal
 - euclid
 - manhattan
@@ -170,7 +170,7 @@ Parameter `hweight` in the input document can be used to adjust the weight of he
 
 So by changing the value of `hweight` parameter you can adjust the importance of the heuristic in distance estimation.
 
-Recommended value is 1, it is also the default value. It gives highest speed while providing strong guarantees on the result. Values from 0 to 1 will still provide the same guarantees for the resulting path, but will expand more nodes during the search, leading to higher memory and time usage. 
+Recommended value is 1, it is also the default value. It gives highest speed while providing strong guarantees on the result. Values from 0 to 1 will still provide the same guarantees for the resulting path, but will expand more nodes during the search, leading to higher memory and time usage.
 
 ### Tie breakers
 Currently there are two tie breakers:
@@ -181,3 +181,15 @@ Currently there are two tie breakers:
 
 For more information on heuristic weights and tie breakers refer to this comprehensive guide page:
 http://theory.stanford.edu/~amitp/GameProgramming/Heuristics.html
+
+## Documentation generation
+
+You can use `doxygen` to generate documentation and class diagrams. For example:
+
+```shell script
+$ doxygen
+$ cd html
+$ python3 -m http.server 8080
+```
+
+will serve generated documentation on `http://localhost:8080` 
